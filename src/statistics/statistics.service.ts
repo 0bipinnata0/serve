@@ -6,7 +6,7 @@ import { Injectable } from '@nestjs/common';
 export class StatisticsService {
   constructor(private readonly appService: AppService) {}
 
-  async getStatistics(): Promise<string> {
+  async getStatistics(): Promise<{ data: string }> {
     const ssh = this.appService.getSSh();
     const data = await ssh.exec(createScript('statistics'));
     const output = data
@@ -22,6 +22,6 @@ export class StatisticsService {
           total: itemArr[3],
         };
       });
-    return output;
+    return { data: output };
   }
 }
