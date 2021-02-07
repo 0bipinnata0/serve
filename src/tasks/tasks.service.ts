@@ -102,6 +102,6 @@ export class TasksService {
       status: this.STATUS[item[4]],
       create_time: item[5].includes('T') ? item[5].replace('T', ' ') : '',
     }));
-    return taskObj;
+    return JSON.stringify({ data: taskObj });
   }
 }
