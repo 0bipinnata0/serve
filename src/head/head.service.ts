@@ -24,7 +24,6 @@ export class HeadService {
     const numberArr = [0, 0, 0, 0];
     const infoData = await ssh.exec('sinfo');
     const sinfoArr = this.tasksService.createArr(infoData);
-    console.log(sinfoArr);
     sinfoArr.forEach((item) => {
       const nodes = item.NODES * 1;
       numberArr[0] = numberArr[0] + nodes;
