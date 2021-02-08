@@ -8,20 +8,20 @@ import { PedantsTypeModule } from './pedants-type/pedants-type.module';
 import { HeadController } from './head/head.controller';
 import { StatisticsController } from './statistics/statistics.controller';
 import { TasksController } from './tasks/tasks.controller';
-import { UsersController } from './users/users.controller';
 import { SettingController } from './setting/setting.controller';
 import { AboutController } from './about/about.controller';
 import { TasksService } from './tasks/tasks.service';
+import { AuthModule } from './auth/auth.module';
+import { UserModule } from './user/user.module';
 
 @Module({
-  imports: [PedantsTypeModule],
+  imports: [PedantsTypeModule, AuthModule, UserModule],
   controllers: [
     AppController,
     ArticleController,
     HeadController,
     StatisticsController,
     TasksController,
-    UsersController,
     SettingController,
     AboutController,
   ],
