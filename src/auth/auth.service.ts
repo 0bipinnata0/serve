@@ -1,3 +1,4 @@
+import { TokenEntity } from './token.entity';
 import { JwtService } from '@nestjs/jwt';
 import { UserEntity } from './../user/user.entity';
 import { UserService } from './../user/user.service';
@@ -19,5 +20,12 @@ export class AuthService {
     } else {
       return null;
     }
+  }
+
+  async login(user: UserEntity): Promise<TokenEntity> {
+    const { id, username } = user;
+    return {
+      token: this.jwtService.sign({ username, sub: id }),
+    };
   }
 }
