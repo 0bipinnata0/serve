@@ -1,9 +1,9 @@
-import { queryCurrent } from '@/services/user';
+import { modifyUser, queryCurrent } from '@/services/user';
 import type { Effect, Reducer } from 'umi';
 import type { CurrentUser } from './data.d';
 
 export type ModalState = {
-  currentUser?: Partial<CurrentUser>;
+  userInfo?: Partial<CurrentUser>;
   isLoading?: boolean;
 };
 
@@ -12,6 +12,9 @@ export type ModelType = {
   state: ModalState;
   effects: {
     fetch: Effect;
+    account: Effect;
+    password: Effect;
+    description: Effect;
   };
   reducers: {
     save: Reducer<ModalState>;
@@ -35,6 +38,18 @@ const Model: ModelType = {
         type: 'save',
         payload: { userInfo: response },
       });
+    },
+    *account({ account }, { call }) {
+      yield call(modifyUser, 'username', account);
+    },
+
+    *password({ password }, { call }) {
+      yield call(modifyUser, 'password', password);
+    },
+
+    *description({ description }, { call }) {
+      yield console.log(description, call);
+      // yield call(modifyUser, 'description', description);
     },
   },
 

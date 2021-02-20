@@ -33,15 +33,17 @@ class AccountSettings extends Component<AccountSettingsType> {
 
   render() {
     // const { accountSettings, loading } = this.props;
-    const { accountSettings } = this.props;
-    console.log('accountSettings', accountSettings);
+    const { accountSettings, loading, dispatch } = this.props;
     const { userInfo } = accountSettings;
+    console.log('userInfo', userInfo);
     return (
       <GridContent>
         <SecurityView
           account={userInfo.account}
           password={userInfo.password}
           description={userInfo.description}
+          dispatch={dispatch}
+          loading={loading}
         />
       </GridContent>
     );
