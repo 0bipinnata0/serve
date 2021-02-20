@@ -2,58 +2,62 @@ import React, { Component } from 'react';
 import type { Dispatch } from 'umi';
 import { connect } from 'umi';
 import { GridContent } from '@ant-design/pro-layout';
-import type { CurrentUser } from './data.d';
+// import type { CurrentUser } from './data.d';
 import SecurityView from './components/security';
 
-type AccountSettingsProps = {
-  dispatch: Dispatch;
-  currentUser: CurrentUser;
-}
-
-type AccountSettingsStateKeys = 'base' | 'security' | 'binding' | 'notification';
-type AccountSettingsState = {
-  selectKey: AccountSettingsStateKeys;
-}
-
-class AccountSettings extends Component<
-  AccountSettingsProps,
-  AccountSettingsState
-  > {
-  main: HTMLDivElement | undefined = undefined;
-
-  constructor(props: AccountSettingsProps) {
-    super(props);
-    this.state = {
-      selectKey: 'base',
-    };
-  }
-
+type AccountSettingsType = {
+  accountSettings: any;
+  dispatch: Dispatch<any>;
+  loading: boolean;
+};
+class AccountSettings extends Component<AccountSettingsType> {
+  reqRef: number = 0;
+  timeoutId: number = 0;
   componentDidMount() {
     const { dispatch } = this.props;
-    dispatch({
-      type: 'accountSettings/fetchCurrent',
+    this.reqRef = requestAnimationFrame(() => {
+      dispatch({
+        type: 'accountSettings/fetch',
+      });
     });
   }
 
+  componentWillUnmount() {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'accountSettings/clear',
+    });
+    cancelAnimationFrame(this.reqRef);
+    clearTimeout(this.timeoutId);
+  }
+
   render() {
-    const { currentUser } = this.props;
-    if (!currentUser.userid) {
-      return '';
-    }
+    // const { accountSettings, loading } = this.props;
+    const { accountSettings } = this.props;
+    console.log('accountSettings', accountSettings);
+    const { userInfo } = accountSettings;
     return (
       <GridContent>
         <SecurityView
-          account={currentUser.account}
-          password={currentUser.password}
-          description={currentUser.description}
+          account={userInfo.account}
+          password={userInfo.password}
+          description={userInfo.description}
         />
       </GridContent>
     );
   }
 }
 
-export default connect(
-  ({ accountSettings }: { accountSettings: { currentUser: CurrentUser } }) => ({
-    currentUser: accountSettings.currentUser,
-  }),
-)(AccountSettings);
+type obj = {
+  accountSettings: any;
+  loading: {
+    effects: Record<string, boolean>;
+  };
+};
+
+const mapStateToProps = ({ accountSettings, loading }: obj) => ({
+  accountSettings,
+  loading: loading.effects['accountSettings/fetch'],
+});
+
+export default connect(mapStateToProps)(AccountSettings);

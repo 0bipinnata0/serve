@@ -11,44 +11,42 @@ export type ModelType = {
   namespace: string;
   state: ModalState;
   effects: {
-    fetchCurrent: Effect;
+    fetch: Effect;
   };
   reducers: {
-    saveCurrentUser: Reducer<ModalState>;
-    changeLoading: Reducer<ModalState>;
+    save: Reducer<ModalState>;
+    clear: Reducer<ModalState>;
   };
+};
+const initState = {
+  userInfo: {},
+  isLoading: false,
 };
 
 const Model: ModelType = {
   namespace: 'accountSettings',
 
-  state: {
-    currentUser: {},
-    isLoading: false,
-  },
+  state: initState,
 
   effects: {
-    *fetchCurrent(_, { call, put }) {
+    *fetch(_, { call, put }) {
       const response = yield call(queryCurrent);
       yield put({
-        type: 'saveCurrentUser',
-        payload: response,
+        type: 'save',
+        payload: { userInfo: response },
       });
     },
   },
 
   reducers: {
-    saveCurrentUser(state, action) {
+    save(state, { payload }) {
       return {
         ...state,
-        currentUser: action.payload || {},
+        ...payload,
       };
     },
-    changeLoading(state, action) {
-      return {
-        ...state,
-        isLoading: action.payload,
-      };
+    clear() {
+      return initState;
     },
   },
 };

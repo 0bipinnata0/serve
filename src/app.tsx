@@ -143,6 +143,6 @@ requestTmp.interceptors.request.use((url, options) => {
 // RequestConfig
 export const request = {
   errorHandler,
-  // prefix: 'http://localhost:3333',
-  prefix: 'http://192.168.173.1:3333',
+  prefix: 'http://localhost:3333',
+  // prefix: 'http://192.168.173.1:3333',
 };

@@ -40,9 +40,9 @@ export type CurrentUser = {
   notifyCount: number;
   unreadCount: number;
   country: string;
-  geographic: GeographicType;
   address: string;
   phone: string;
   leader: string;
   account: string;
+  password: string;
 };

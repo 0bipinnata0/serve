@@ -10,7 +10,12 @@ import styles from './Center.less';
 import { Descriptions } from 'antd';
 import { Fragment } from 'react';
 import { List } from 'antd';
-import { BarsOutlined, ClockCircleOutlined, DatabaseOutlined, UserOutlined } from '@ant-design/icons';
+import {
+  BarsOutlined,
+  ClockCircleOutlined,
+  DatabaseOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
 import { Button } from 'antd';
 import { Space } from 'antd';
 
@@ -18,10 +23,10 @@ type AccountCenterProps = {
   dispatch: Dispatch<any>;
   currentUser: Partial<CurrentUser>;
   currentUserLoading: boolean;
-} & RouteChildrenProps
+} & RouteChildrenProps;
 type AccountCenterState = {
   tabKey?: 'articles' | 'applications' | 'projects';
-}
+};
 
 const IconText = ({ icon, text }) => (
   <Space>
@@ -35,29 +40,27 @@ const aaabbbccc = [
     id: 'description',
     title: '项目组描述',
     description: '项目组负责人很懒，什么都没有留下',
-    content: ({ description }) => <div>
-      {description}
-    </div>,
+    content: ({ description }) => <div>{description}</div>,
   },
   {
     id: 'account',
     title: '负责人账号',
-    content: ({ account }) =>
-      <Card bordered={false} style={{ width: "85%" }} bodyStyle={{ padding: 'initial' }}>
-        <Button icon={<UserOutlined />}>
-          {account}
-        </Button>
-      </Card>,
+    content: ({ account }) => (
+      <Card bordered={false} style={{ width: '85%' }} bodyStyle={{ padding: 'initial' }}>
+        <Button icon={<UserOutlined />}>{account}</Button>
+      </Card>
+    ),
   },
   {
     id: 'avatar',
     title: '项目组资源',
-    content: ({ avatar, resourceName, resourceCode, cores, continues, capacity }) =>
-      <Card style={{ width: "85%" }} bodyStyle={{ padding: 'initial' }}>
+    content: ({ avatar, resourceName, resourceCode, cores, continues, capacity }) => (
+      <Card style={{ width: '85%' }} bodyStyle={{ padding: 'initial' }}>
         <Card.Grid style={{ width: '10%', boxShadow: 'initial' }} hoverable={false}>
           <div className={styles.avatarSmall}>
             <img alt="" src={avatar} />
-          </div></Card.Grid>
+          </div>
+        </Card.Grid>
         <Card.Grid style={{ width: '90%', boxShadow: 'initial' }} hoverable={false}>
           <List>
             <List.Item.Meta avatar={resourceName} title={resourceCode} />
@@ -67,17 +70,15 @@ const aaabbbccc = [
                 <IconText icon={BarsOutlined} text={cores} key="list-vertical-star-o" />,
                 <IconText icon={ClockCircleOutlined} text={continues} key="list-vertical-like-o" />,
                 <IconText icon={DatabaseOutlined} text={capacity} key="list-vertical-message" />,
-              ]} />
+              ]}
+            />
           </List>
         </Card.Grid>
-
-      </Card >,
+      </Card>
+    ),
   },
 ];
-class AccountCenter extends Component<
-  AccountCenterProps,
-  AccountCenterState
-  > {
+class AccountCenter extends Component<AccountCenterProps, AccountCenterState> {
   state: AccountCenterState = {
     tabKey: 'articles',
   };
@@ -113,7 +114,7 @@ class AccountCenter extends Component<
       <GridContent>
         <Row gutter={24}>
           <Col lg={24} md={24}>
-            <Card bordered={false} style={{ marginBottom: 24 }} loading={dataLoading} >
+            <Card bordered={false} style={{ marginBottom: 24 }} loading={dataLoading}>
               {!dataLoading && (
                 <div>
                   <Card.Grid style={{ width: '20%', boxShadow: 'initial' }} hoverable={false}>
@@ -123,7 +124,7 @@ class AccountCenter extends Component<
                     {/* <Divider dashed />
                   <TagList tags={currentUser.tags || []} /> */}
                   </Card.Grid>
-                  <Card.Grid style={{ width: '80%', boxShadow: 'initial' }} hoverable={false} >
+                  <Card.Grid style={{ width: '80%', boxShadow: 'initial' }} hoverable={false}>
                     <div className={styles.team}>
                       <div className={styles.teamTitle}>项目组详情</div>
                       {this.renderUserInfo(currentUser)}
@@ -134,17 +135,14 @@ class AccountCenter extends Component<
             </Card>
           </Col>
           <Col lg={24} md={24}>
-            <Card
-              className={styles.tabsCard}
-              bordered={false}
-            >
+            <Card className={styles.tabsCard} bordered={false}>
               <Fragment>
                 <List
                   itemLayout="horizontal"
                   dataSource={aaabbbccc}
                   renderItem={(item) => {
-                    const target = currentUser[item.id]
-                    const renderFunc = item.content
+                    const target = currentUser[item.id];
+                    const renderFunc = item.content;
                     return (
                       <List.Item>
                         <List.Item.Meta
@@ -154,14 +152,14 @@ class AccountCenter extends Component<
                         />
                         {target ? renderFunc(currentUser) : null}
                       </List.Item>
-                    )
+                    );
                   }}
                 />
               </Fragment>
             </Card>
           </Col>
         </Row>
-      </GridContent >
+      </GridContent>
     );
   }
 }
