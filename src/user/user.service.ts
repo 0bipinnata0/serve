@@ -19,13 +19,30 @@ export class UserService {
   }
 
   getUserInfo(token: any): any {
-    const userIndex = <Record<string, string>>this.jwtService.decode(token);
+    const { sub } = <Record<string, string>>this.jwtService.decode(token);
     const userInfo = JSON.parse(
-      fs.readFileSync(`./sh/user/info/${userIndex.sub}.json`).toString(),
+      fs.readFileSync(`./sh/user/info/${sub}.json`).toString(),
     );
+    const userIndex = JSON.parse(
+      fs.readFileSync('./sh/user/user.json').toString(),
+    ).filter(({ id }) => id === sub)[0];
     return {
       ...userInfo,
       ...userIndex,
+      account: userIndex.username,
     };
+  }
+
+  modifyUser(key: string, value: string, token: string) {
+    const userIndex = <Record<string, string>>this.jwtService.decode(token);
+    const targetFile = './sh/user/user.json';
+
+    const userInfo = JSON.parse(fs.readFileSync(targetFile).toString());
+
+    // userInfo.map()
+    userInfo.forEach(
+      (item) => item.id === userIndex.sub && (item[key] = value),
+    );
+    fs.writeFileSync(targetFile, JSON.stringify(userInfo));
   }
 }
