@@ -13,21 +13,21 @@ export class AuthService {
 
   async validate(username: string, password: string): Promise<UserEntity> {
     const user = await this.userService.find(username);
-    // 注：实际中的密码处理应通过加密措施
+    // 密码明文
     if (user && user.password === password) {
-      const { password, ...userInfo } = user;
-      return userInfo;
+      // const { password, ...userInfo } = user;
+      return user;
     } else {
       return null;
     }
   }
 
   async login(user: UserEntity): Promise<ResponseData> {
-    const { id, username } = user;
+    const { id, username, password } = user;
     return {
       statusCode: 200,
       message: 'ok',
-      data: this.jwtService.sign({ username, sub: id }),
+      data: this.jwtService.sign({ username, password, sub: id }),
     };
   }
 }
