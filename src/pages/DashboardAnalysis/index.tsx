@@ -13,12 +13,9 @@ type DashboardAnalysisProps = {
   dashboardAnalysis: AnalysisData;
   dispatch: Dispatch<any>;
   loading: boolean;
-}
+};
 
-class DashboardAnalysis extends Component<
-  DashboardAnalysisProps
-  > {
-
+class DashboardAnalysis extends Component<DashboardAnalysisProps> {
   reqRef: number = 0;
 
   timeoutId: number = 0;
@@ -43,12 +40,7 @@ class DashboardAnalysis extends Component<
 
   render() {
     const { dashboardAnalysis, loading } = this.props;
-    const {
-      nodes,
-      cores,
-      availableTime,
-      storage
-    } = dashboardAnalysis;
+    const { nodes, cores, availableTime, storage } = dashboardAnalysis;
     return (
       <GridContent>
         <React.Fragment>
@@ -60,21 +52,12 @@ class DashboardAnalysis extends Component<
           >
             <Col xl={12} lg={24} md={24} sm={24} xs={24}>
               <Suspense fallback={null}>
-                <ProportionSales
-                  loading={loading}
-                  nodes={nodes}
-                  cores={cores}
-                />
+                <ProportionSales loading={loading} nodes={nodes} cores={cores} />
               </Suspense>
             </Col>
-
             <Col xl={12} lg={24} md={24} sm={24} xs={24}>
               <Suspense fallback={null}>
-                <SalesCard
-                  availableTime={availableTime}
-                  storage={storage}
-                  loading={loading}
-                />
+                <SalesCard availableTime={availableTime} storage={storage} loading={loading} />
               </Suspense>
             </Col>
           </Row>
@@ -84,17 +67,16 @@ class DashboardAnalysis extends Component<
   }
 }
 
-export default connect(
-  ({
-    dashboardAnalysis,
-    loading,
-  }: {
-    dashboardAnalysis: any;
-    loading: {
-      effects: { [key: string]: boolean };
-    };
-  }) => ({
-    dashboardAnalysis,
-    loading: loading.effects['dashboardAnalysis/fetch'],
-  }),
-)(DashboardAnalysis);
+type obj = {
+  dashboardAnalysis: any;
+  loading: {
+    effects: Record<string, boolean>;
+  };
+};
+
+const mapStateToProps = ({ dashboardAnalysis, loading }: obj) => ({
+  dashboardAnalysis,
+  loading: loading.effects['dashboardAnalysis/fetch'],
+});
+
+export default connect(mapStateToProps)(DashboardAnalysis);

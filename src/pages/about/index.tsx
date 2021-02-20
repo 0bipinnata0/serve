@@ -1,8 +1,5 @@
 import { MailOutlined, PhoneOutlined, QqOutlined } from '@ant-design/icons';
-import { Badge } from 'antd';
-import { Card } from 'antd';
-import { List } from 'antd';
-import { Descriptions } from 'antd';
+import { Card, Descriptions, List } from 'antd';
 import React from 'react';
 import styles from './index.less';
 
@@ -10,8 +7,11 @@ export default () => (
   <div className={styles.container}>
     <div className="site-card-border-less-wrapper">
       <Card title="研之成理(杭州)网络科技有限公司" bordered={false} style={{ width: '100%' }}>
-        <Descriptions title="User Info" bordered column={1} size="small">
-          <Descriptions.Item label="庚子矩阵服务器:" labelStyle={{ width: '20%', verticalAlign: 'text-top' }}>
+        <Descriptions bordered column={1} size="small">
+          <Descriptions.Item
+            label="庚子矩阵服务器:"
+            labelStyle={{ width: '20%', verticalAlign: 'text-top' }}
+          >
             <Card bordered={false} bodyStyle={{ padding: '1px' }}>
               承诺三年质保
               <br />
@@ -20,10 +20,16 @@ export default () => (
               解决程序使用问题
             </Card>
           </Descriptions.Item>
-          <Descriptions.Item label="联系方式：" labelStyle={{ width: '20%', verticalAlign: 'text-top' }}>
+          <Descriptions.Item
+            label="联系方式："
+            labelStyle={{ width: '20%', verticalAlign: 'text-top' }}
+          >
             <List split={false} style={{ marginLeft: '10px' }}>
               <List.Item style={{ padding: '6px' }}>
-                <List.Item.Meta avatar={<PhoneOutlined rotate={90} />} description={'021-61872210'} />
+                <List.Item.Meta
+                  avatar={<PhoneOutlined rotate={90} />}
+                  description={'021-61872210'}
+                />
               </List.Item>
               <List.Item style={{ padding: '6px' }}>
                 <List.Item.Meta avatar={<MailOutlined />} description={'zyyao@ssctech.net'} />

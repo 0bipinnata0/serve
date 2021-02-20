@@ -1,14 +1,11 @@
-import {
-  LockTwoTone,
-  UserOutlined,
-} from '@ant-design/icons';
+import { LockTwoTone, UserOutlined } from '@ant-design/icons';
 import { Alert, message } from 'antd';
 import React, { useState } from 'react';
 import ProForm, { ProFormText } from '@ant-design/pro-form';
-import { useIntl, Link, history, FormattedMessage, useModel } from 'umi';
+import { useIntl, history, FormattedMessage, useModel } from 'umi';
 import Footer from '@/components/Footer';
 import type { LoginParamsType } from '@/services/login';
-import { fakeAccountLogin } from '@/services/login';
+import { accountLogin } from '@/services/login';
 
 import styles from './index.less';
 
@@ -46,6 +43,7 @@ const Login: React.FC = () => {
 
   const fetchUserInfo = async () => {
     const userInfo = await initialState?.fetchUserInfo?.();
+    console.log('userInfo', initialState);
     if (userInfo) {
       setInitialState({
         ...initialState,
@@ -58,8 +56,11 @@ const Login: React.FC = () => {
     setSubmitting(true);
     try {
       // 登录
-      const msg = await fakeAccountLogin({ ...values });
-      if (msg.status === 'ok') {
+      const msg = await accountLogin({ ...values });
+      if (msg.message === 'ok') {
+        const token = msg.data;
+        // localStorage.setItem('x-auth-token', token);
+        window.sessionStorage.setItem('x-auth-token', token);
         message.success('登录成功！');
         await fetchUserInfo();
         goto();
@@ -67,12 +68,13 @@ const Login: React.FC = () => {
       }
       // 如果失败去设置用户错误信息
       setUserLoginState(msg);
-    } catch (error) {
-      message.error('登录失败，请重试！');
+    } catch ({ data }) {
+      setUserLoginState(data);
+      // message.error('登录失败，请重试！');
     }
     setSubmitting(false);
   };
-  const { status, type: loginType } = userLoginState;
+  const { error } = userLoginState;
 
   return (
     <div className={styles.container}>
@@ -110,7 +112,7 @@ const Login: React.FC = () => {
               handleSubmit(values as LoginParamsType);
             }}
           >
-            {status === 'error' && (
+            {error && (
               <LoginMessage
                 content={intl.formatMessage({
                   id: 'pages.login.accountLogin.errorMessage',
@@ -171,4 +173,3 @@ const Login: React.FC = () => {
 };
 
 export default Login;
-

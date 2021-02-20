@@ -8,15 +8,11 @@ export type LoginParamsType = {
   type: string;
 };
 
-export async function fakeAccountLogin(params: LoginParamsType) {
-  return request<API.LoginStateType>('/api/login/account', {
+export async function accountLogin(params: LoginParamsType) {
+  return request<API.LoginStateType>('/auth/login', {
     method: 'POST',
     data: params,
   });
-}
-
-export async function getFakeCaptcha(mobile: string) {
-  return request(`/api/login/captcha?mobile=${mobile}`);
 }
 
 export async function outLogin() {

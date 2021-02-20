@@ -1,6 +1,6 @@
+import { queryCurrent } from '@/services/user';
 import type { Effect, Reducer } from 'umi';
 import type { CurrentUser } from './data.d';
-import { queryCurrent } from './service';
 
 export type ModalState = {
   currentUser?: Partial<CurrentUser>;

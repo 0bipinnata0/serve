@@ -277,7 +277,6 @@ class Pie extends Component<PieProps, PieState> {
             )}
           </div>
         </ReactFitText>
-
       </div>
     );
   }

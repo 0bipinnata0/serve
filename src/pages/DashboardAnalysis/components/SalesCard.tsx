@@ -6,43 +6,6 @@ import { Bar } from './Charts';
 import styles from '../style.less';
 import { Table } from 'antd';
 
-
-const availableTimeD = [
-  {
-    key: '1',
-    name: 'Total',
-    size: '1000h',
-  },
-  {
-    key: '2',
-    name: 'Used',
-    size: '500h',
-  },
-  {
-    key: '3',
-    name: 'Left',
-    size: '500h',
-  },
-];
-
-const storageD = [
-  {
-    key: '1',
-    name: 'Total',
-    size: '1000G',
-  },
-  {
-    key: '2',
-    name: 'Used',
-    size: '770G',
-  },
-  {
-    key: '3',
-    name: 'Left',
-    size: '230G',
-  },
-];
-
 const columns = [
   {
     title: 'name',
@@ -66,14 +29,20 @@ const SalesCard = ({
   loading: boolean;
 }) => (
   <Card title="项目组资源" loading={loading} bordered={false} bodyStyle={{ padding: 0 }}>
-    <Card.Grid style={{
-      width: '100%',
-      textAlign: 'center',
-    }}>
-      <Card.Grid style={{
-        width: '50%',
+    <Card.Grid
+      style={{
+        width: '100%',
         textAlign: 'center',
-      }}>
+      }}
+      hoverable={false}
+    >
+      <Card.Grid
+        style={{
+          width: '50%',
+          textAlign: 'center',
+        }}
+        hoverable={false}
+      >
         <div className={styles.salesBar}>
           <Bar
             height={295}
@@ -87,42 +56,69 @@ const SalesCard = ({
           />
         </div>
       </Card.Grid>
-      <Card.Grid style={{
-        width: '50%',
-        textAlign: 'center',
-      }}>
+      <Card.Grid
+        style={{
+          width: '50%',
+          textAlign: 'center',
+        }}
+        hoverable={false}
+      >
         <Card title="Available Time" bordered={false} headStyle={{ textAlign: 'center' }}>
-          <Table showHeader={false} dataSource={availableTimeD} columns={columns} pagination={{ hideOnSinglePage: true }} />
+          <Table
+            showHeader={false}
+            dataSource={availableTime.map(({ x, y }, key) => ({
+              key,
+              name: x,
+              size: `${y}h`,
+            }))}
+            columns={columns}
+            pagination={{ hideOnSinglePage: true }}
+          />
         </Card>
       </Card.Grid>
     </Card.Grid>
-    <Card.Grid style={{
-      width: '100%',
-      textAlign: 'center',
-    }}>
-      <Card.Grid style={{
-        width: '50%',
+    <Card.Grid
+      style={{
+        width: '100%',
         textAlign: 'center',
-      }}>
+      }}
+      hoverable={false}
+    >
+      <Card.Grid
+        style={{
+          width: '50%',
+          textAlign: 'center',
+        }}
+        hoverable={false}
+      >
         <div className={styles.salesBar}>
           <Bar
             height={295}
             title={
-              <FormattedMessage
-                id="dashboardanalysis.analysis.storage"
-                defaultMessage="storage"
-              />
+              <FormattedMessage id="dashboardanalysis.analysis.storage" defaultMessage="storage" />
             }
             data={storage}
           />
         </div>
       </Card.Grid>
-      <Card.Grid style={{
-        width: '50%',
-        textAlign: 'center',
-      }}>
+      <Card.Grid
+        style={{
+          width: '50%',
+          textAlign: 'center',
+        }}
+        hoverable={false}
+      >
         <Card title="Storage" bordered={false} headStyle={{ textAlign: 'center' }}>
-          <Table showHeader={false} dataSource={storageD} columns={columns} pagination={{ hideOnSinglePage: true }} />
+          <Table
+            showHeader={false}
+            dataSource={storage.map(({ x, y }, key) => ({
+              key,
+              name: x,
+              size: `${y}G`,
+            }))}
+            columns={columns}
+            pagination={{ hideOnSinglePage: true }}
+          />
         </Card>
       </Card.Grid>
     </Card.Grid>

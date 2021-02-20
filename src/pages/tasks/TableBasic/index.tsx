@@ -1,83 +1,77 @@
-import React from "react";
-import styles from "./index.less";
-import { Table, Tag } from "antd";
+import React from 'react';
+import styles from './index.less';
+import { Table, Tag } from 'antd';
 import moment from 'moment';
 import { DatePicker } from 'antd';
-import { ClockCircleOutlined } from '@ant-design/icons';
 import { connect } from 'umi';
 import { Component } from 'react';
 import type { TableBasicP } from './data';
+import { ClockCircleOutlined } from '@ant-design/icons';
 
 const columns = [
   {
-    title: "ID",
-    dataIndex: "id",
-    key: "id",
+    title: 'ID',
+    dataIndex: 'id',
+    key: 'id',
   },
   {
-    title: "Location",
-    dataIndex: "location",
-    key: "location"
+    title: 'Location',
+    dataIndex: 'location',
+    key: 'location',
   },
   {
-    title: "User",
-    dataIndex: "user",
-    key: "user"
+    title: 'User',
+    dataIndex: 'user',
+    key: 'user',
   },
   {
-    title: "Spend_time",
-    key: "spend_time",
-    dataIndex: "spend_time"
+    title: 'Spend_time',
+    key: 'spend_time',
+    dataIndex: 'spend_time',
   },
   {
-    title: "Status",
-    key: "status",
-    dataIndex: "status",
-    render: (text, record, row) => {
+    title: 'Status',
+    key: 'status',
+    dataIndex: 'status',
+    // text, record, row
+    render: (text: string) => {
       switch (text) {
         case '0':
-          return (
-            <Tag color="#69be43">running</Tag>
-          )
+          return <Tag color="#69be43">running</Tag>;
           break;
         case '1':
-          return (
-            <Tag color="#e39f46">stop</Tag>
-          )
+          return <Tag color="#e39f46">stop</Tag>;
           break;
 
         case '2':
-          return (
-            <Tag color="#f16c6f">delete</Tag>
-          )
+          return <Tag color="#f16c6f">delete</Tag>;
           break;
         default:
-          return (<div />)
+          return <div />;
       }
-
-    }
+    },
   },
   {
-    title: "Create_time",
-    key: "create_time",
-    dataIndex: "create_time",
-    render: (text, record, row) => {
+    title: 'Create_time',
+    key: 'create_time',
+    dataIndex: 'create_time',
+    render: (text: string) => {
       return (
         <DatePicker
-          defaultValue={moment(text, "YYYY-MM-DD HH:mm:ss")}
-          format={"YYYY-MM-DD HH:mm:ss"}
+          defaultValue={moment(text, 'YYYY-MM-DD HH:mm:ss')}
+          format={'YYYY-MM-DD HH:mm:ss'}
           disabled={true}
           // onOpenChange={() => { }}
           inputReadOnly={true}
           suffixIcon={<ClockCircleOutlined />}
         />
-      )
-    }
+      );
+    },
   },
   {
     title: '',
     key: 'run',
-    render: (text, record) => (
+    render: () => (
       <>
         <Tag color="#69be43">run</Tag>
       </>
@@ -86,7 +80,7 @@ const columns = [
   {
     title: '',
     key: 'stop',
-    render: (text, record) => (
+    render: () => (
       <>
         <Tag color="#e39f46">stop</Tag>
       </>
@@ -95,7 +89,7 @@ const columns = [
   {
     title: '',
     key: 'delete',
-    render: (text, record) => (
+    render: () => (
       <>
         <Tag color="#f16c6f">delete</Tag>
       </>
@@ -103,16 +97,13 @@ const columns = [
   },
 ];
 
-
 type TableBasicProps = {
   tableBasic: TableBasicP;
   dispatch: Dispatch<any>;
   loading: boolean;
-}
+};
 
-class TableBasic extends Component<
-  TableBasicProps
-  > {
+class TableBasic extends Component<TableBasicProps> {
   reqRef: number = 0;
   timeoutId: number = 0;
   componentDidMount() {
@@ -133,33 +124,30 @@ class TableBasic extends Component<
     clearTimeout(this.timeoutId);
   }
 
-
   render() {
     // const { tableBasic, loading } = this.props;
-    const { tableBasic } = this.props;
-    const data = tableBasic.value
+    const { tableBasic, loading } = this.props;
+    const { data } = tableBasic;
     return (
       <div className={styles.container}>
         <div id="components-table-demo-basic">
-          <Table columns={columns} dataSource={data} bordered={true} />
+          <Table columns={columns} dataSource={data} bordered={true} loading={loading} />
         </div>
       </div>
-    )
+    );
   }
 }
 
+type obj = {
+  tableBasic: any;
+  loading: {
+    effects: Record<string, boolean>;
+  };
+};
 
-export default connect(
-  ({
-    tableBasic,
-    loading,
-  }: {
-    tableBasic: any;
-    loading: {
-      effects: { [key: string]: boolean };
-    };
-  }) => ({
-    tableBasic,
-    loading: loading.effects['tableBasic/fetch'],
-  }),
-)(TableBasic);
+const mapStateToProps = ({ tableBasic, loading }: obj) => ({
+  tableBasic,
+  loading: loading.effects['tableBasic/fetch'],
+});
+
+export default connect(mapStateToProps)(TableBasic);

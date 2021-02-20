@@ -1,6 +1,6 @@
+import type { TableBasicP } from './data.d';
 import { fake_tasks } from '@/services/task';
 import type { Effect, Reducer } from 'umi';
-import type { TableBasicP } from '.';
 
 export type ModelType = {
   namespace: string;
@@ -15,7 +15,7 @@ export type ModelType = {
 };
 
 const initState = {
-  value: [],
+  data: [],
 };
 
 const Model: ModelType = {

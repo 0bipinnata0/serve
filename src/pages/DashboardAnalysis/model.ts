@@ -7,7 +7,7 @@ export type ModelType = {
   state: AnalysisData;
   effects: {
     fetch: Effect;
-    fetchSalesData: Effect;
+    fetchSalesData?: Effect;
   };
   reducers: {
     save: Reducer<AnalysisData>;

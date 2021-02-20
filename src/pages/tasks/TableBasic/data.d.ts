@@ -36,7 +36,7 @@ export type AnalysisData = {
 };
 
 export type TableBasicP = {
-  value: {
+  data: {
     key: string;
     id: string;
     location: string;
