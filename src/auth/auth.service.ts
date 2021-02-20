@@ -1,8 +1,8 @@
-import { TokenEntity } from './token.entity';
 import { JwtService } from '@nestjs/jwt';
 import { UserEntity } from './../user/user.entity';
 import { UserService } from './../user/user.service';
 import { Injectable } from '@nestjs/common';
+import { ResponseData } from 'src/common/interfaces/result.interface';
 
 @Injectable()
 export class AuthService {
@@ -22,10 +22,12 @@ export class AuthService {
     }
   }
 
-  async login(user: UserEntity): Promise<TokenEntity> {
+  async login(user: UserEntity): Promise<ResponseData> {
     const { id, username } = user;
     return {
-      token: this.jwtService.sign({ username, sub: id }),
+      statusCode: 200,
+      message: 'ok',
+      data: this.jwtService.sign({ username, sub: id }),
     };
   }
 }

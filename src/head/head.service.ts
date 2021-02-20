@@ -50,8 +50,16 @@ export class HeadService {
         name: globalData[0][index],
         number: globalData[1][index],
       })),
-      availableTime: [],
-      storage: [],
+      availableTime: [
+        { x: 'Total', y: 1000 },
+        { x: 'Used', y: 400 },
+        { x: 'Left', y: 600 },
+      ],
+      storage: [
+        { x: 'Total', y: 1000 },
+        { x: 'Used', y: 330 },
+        { x: 'Left', y: 670 },
+      ],
     });
   }
 }
