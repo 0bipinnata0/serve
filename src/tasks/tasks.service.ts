@@ -1,5 +1,6 @@
 import { AppService } from './../app.service';
 import { Injectable } from '@nestjs/common';
+import { createScript } from 'src/utils/connectHelp';
 
 @Injectable()
 export class TasksService {
@@ -103,5 +104,12 @@ export class TasksService {
       create_time: item[5].includes('T') ? item[5].replace('T', ' ') : '',
     }));
     return JSON.stringify({ data: taskObj });
+  }
+
+  async deleteTask(id: string): Promise<string> {
+    const ssh = this.appService.getSSh();
+    const data = await ssh.exec(createScript('deleteTask'));
+    console.log('data', data, '-', id);
+    return await this.getTasks();
   }
 }
