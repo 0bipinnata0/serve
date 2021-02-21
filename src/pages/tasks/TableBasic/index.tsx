@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './index.less';
-import { Table, Tag } from 'antd';
+import { Button, Table, Tag } from 'antd';
 import moment from 'moment';
 import { DatePicker } from 'antd';
 import { connect } from 'umi';
@@ -8,7 +8,15 @@ import { Component } from 'react';
 import type { TableBasicP } from './data';
 import { ClockCircleOutlined } from '@ant-design/icons';
 
-const columns = [
+type colType = {
+  title: string;
+  dataIndex?: string;
+  key: string;
+  onCell?: any;
+  render?: any;
+}[];
+
+const columns: colType = [
   {
     title: 'ID',
     dataIndex: 'id',
@@ -33,19 +41,14 @@ const columns = [
     title: 'Status',
     key: 'status',
     dataIndex: 'status',
-    // text, record, row
     render: (text: string) => {
       switch (text) {
         case '0':
           return <Tag color="#69be43">running</Tag>;
-          break;
         case '1':
           return <Tag color="#e39f46">stop</Tag>;
-          break;
-
         case '2':
           return <Tag color="#f16c6f">delete</Tag>;
-          break;
         default:
           return <div />;
       }
@@ -70,29 +73,11 @@ const columns = [
   },
   {
     title: '',
-    key: 'run',
-    render: () => (
-      <>
-        <Tag color="#69be43">run</Tag>
-      </>
-    ),
-  },
-  {
-    title: '',
-    key: 'stop',
-    render: () => (
-      <>
-        <Tag color="#e39f46">stop</Tag>
-      </>
-    ),
-  },
-  {
-    title: '',
     key: 'delete',
     render: () => (
-      <>
+      <Button type="text">
         <Tag color="#f16c6f">delete</Tag>
-      </>
+      </Button>
     ),
   },
 ];
@@ -126,12 +111,32 @@ class TableBasic extends Component<TableBasicProps> {
 
   render() {
     // const { tableBasic, loading } = this.props;
-    const { tableBasic, loading } = this.props;
+    const { tableBasic, loading, dispatch } = this.props;
     const { data } = tableBasic;
+
     return (
       <div className={styles.container}>
         <div id="components-table-demo-basic">
-          <Table columns={columns} dataSource={data} bordered={true} loading={loading} />
+          <Table
+            columns={columns.map((item) =>
+              item.key === 'delete'
+                ? {
+                    ...item,
+                    onCell: (record: any) => ({
+                      onClick: () => {
+                        dispatch({
+                          type: 'tableBasic/deleteSync',
+                          payload: record.id,
+                        });
+                      },
+                    }),
+                  }
+                : item,
+            )}
+            dataSource={data}
+            bordered={true}
+            loading={loading}
+          />
         </div>
       </div>
     );

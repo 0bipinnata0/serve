@@ -1,5 +1,5 @@
 import type { TableBasicP } from './data.d';
-import { fake_tasks } from '@/services/task';
+import { deleteNode, fake_tasks } from '@/services/task';
 import type { Effect, Reducer } from 'umi';
 
 export type ModelType = {
@@ -7,10 +7,12 @@ export type ModelType = {
   state: TableBasicP;
   effects: {
     fetch: Effect;
+    deleteSync: Effect;
   };
   reducers: {
     save: Reducer<TableBasicP>;
     clear: Reducer<TableBasicP>;
+    delete: Reducer<TableBasicP>;
   };
 };
 
@@ -31,6 +33,13 @@ const Model: ModelType = {
         payload: response,
       });
     },
+    *deleteSync({ payload }, { call, put }) {
+      const response = yield call(deleteNode, payload);
+      yield put({
+        type: 'save',
+        payload: response,
+      });
+    },
   },
 
   reducers: {
@@ -42,6 +51,12 @@ const Model: ModelType = {
     },
     clear() {
       return initState;
+    },
+    delete(state, { payload }) {
+      return {
+        ...state,
+        ...payload,
+      };
     },
   },
 };
