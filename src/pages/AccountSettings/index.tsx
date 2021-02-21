@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import type { Dispatch } from 'umi';
 import { connect } from 'umi';
 import { GridContent } from '@ant-design/pro-layout';
-// import type { CurrentUser } from './data.d';
 import SecurityView from './components/security';
 
 type AccountSettingsType = {
@@ -35,7 +34,6 @@ class AccountSettings extends Component<AccountSettingsType> {
     // const { accountSettings, loading } = this.props;
     const { accountSettings, loading, dispatch } = this.props;
     const { userInfo } = accountSettings;
-    console.log('userInfo', userInfo);
     return (
       <GridContent>
         <SecurityView

@@ -45,4 +45,7 @@ export type CurrentUser = {
   leader: string;
   account: string;
   password: string;
+  cores: string;
+  continues: string;
+  capacity: string;
 };

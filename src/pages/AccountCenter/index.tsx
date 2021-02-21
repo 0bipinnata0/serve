@@ -1,51 +1,51 @@
-import { Card, Col, Row } from 'antd';
-import React, { Component } from 'react';
+import { Card, Col, Row, List, Descriptions, Button, Space } from 'antd';
+import React, { Component, Fragment } from 'react';
 import { GridContent } from '@ant-design/pro-layout';
 import type { Dispatch } from 'umi';
 import { connect } from 'umi';
-import type { RouteChildrenProps } from 'react-router';
-import type { ModalState } from './model';
-import type { CurrentUser } from './data.d';
+import type { CurrentUser } from '../AccountSettings/data';
 import styles from './Center.less';
-import { Descriptions } from 'antd';
-import { Fragment } from 'react';
-import { List } from 'antd';
 import {
   BarsOutlined,
   ClockCircleOutlined,
   DatabaseOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import { Button } from 'antd';
-import { Space } from 'antd';
 
-type AccountCenterProps = {
+type AccountSettingsType = {
+  accountCenter: any;
   dispatch: Dispatch<any>;
-  currentUser: Partial<CurrentUser>;
-  currentUserLoading: boolean;
-} & RouteChildrenProps;
-type AccountCenterState = {
-  tabKey?: 'articles' | 'applications' | 'projects';
+  loading: boolean;
 };
 
-const IconText = ({ icon, text }) => (
+const IconText = ({ icon, text }: { icon: any; text: string }) => (
   <Space>
     {React.createElement(icon)}
     {text}
   </Space>
 );
 
-const aaabbbccc = [
+type dataSourceType = {
+  id: string;
+  title: string;
+  description?: string;
+  renderFunc: (obj: CurrentUser) => any;
+}[];
+const dataSource: dataSourceType = [
   {
     id: 'description',
     title: '项目组描述',
-    description: '项目组负责人很懒，什么都没有留下',
-    content: ({ description }) => <div>{description}</div>,
+    // description: '项目组负责人很懒，什么都没有留下',
+    renderFunc: ({ description }) => (
+      <Card bordered={false} style={{ width: '85%' }} bodyStyle={{ padding: 'initial' }}>
+        <div>{description || '项目组负责人很懒，什么都没有留下'}</div>
+      </Card>
+    ),
   },
   {
     id: 'account',
     title: '负责人账号',
-    content: ({ account }) => (
+    renderFunc: ({ account }) => (
       <Card bordered={false} style={{ width: '85%' }} bodyStyle={{ padding: 'initial' }}>
         <Button icon={<UserOutlined />}>{account}</Button>
       </Card>
@@ -54,7 +54,7 @@ const aaabbbccc = [
   {
     id: 'avatar',
     title: '项目组资源',
-    content: ({ avatar, resourceName, resourceCode, cores, continues, capacity }) => (
+    renderFunc: ({ avatar, resourceName, resourceCode, cores, continues, capacity }) => (
       <Card style={{ width: '85%' }} bodyStyle={{ padding: 'initial' }}>
         <Card.Grid style={{ width: '10%', boxShadow: 'initial' }} hoverable={false}>
           <div className={styles.avatarSmall}>
@@ -78,27 +78,17 @@ const aaabbbccc = [
     ),
   },
 ];
-class AccountCenter extends Component<AccountCenterProps, AccountCenterState> {
-  state: AccountCenterState = {
-    tabKey: 'articles',
-  };
-
+class AccountCenter extends Component<AccountSettingsType> {
+  reqRef: number = 0;
+  timeoutId: number = 0;
   componentDidMount() {
     const { dispatch } = this.props;
-    dispatch({
-      type: 'accountCenter/fetchCurrent',
+    this.reqRef = requestAnimationFrame(() => {
+      dispatch({
+        type: 'accountCenter/fetch',
+      });
     });
   }
-
-  onTabChange = (key: string) => {
-    // If you need to sync state to url
-    // const { match } = this.props;
-    // router.push(`${match.url}/${key}`);
-    this.setState({
-      tabKey: key as AccountCenterState['tabKey'],
-    });
-  };
-
   renderUserInfo = (currentUser: Partial<CurrentUser>) => (
     <div className={styles.detail}>
       <Descriptions>
@@ -108,30 +98,26 @@ class AccountCenter extends Component<AccountCenterProps, AccountCenterState> {
   );
 
   render() {
-    const { currentUser = {}, currentUserLoading } = this.props;
-    const dataLoading = currentUserLoading || !(currentUser && Object.keys(currentUser).length);
+    const { accountCenter, loading } = this.props;
+    const { userInfo } = accountCenter;
     return (
       <GridContent>
         <Row gutter={24}>
           <Col lg={24} md={24}>
-            <Card bordered={false} style={{ marginBottom: 24 }} loading={dataLoading}>
-              {!dataLoading && (
-                <div>
-                  <Card.Grid style={{ width: '20%', boxShadow: 'initial' }} hoverable={false}>
-                    <div className={styles.avatarHolder}>
-                      <img alt="" src={currentUser.avatar} />
-                    </div>
-                    {/* <Divider dashed />
-                  <TagList tags={currentUser.tags || []} /> */}
-                  </Card.Grid>
-                  <Card.Grid style={{ width: '80%', boxShadow: 'initial' }} hoverable={false}>
-                    <div className={styles.team}>
-                      <div className={styles.teamTitle}>项目组详情</div>
-                      {this.renderUserInfo(currentUser)}
-                    </div>
-                  </Card.Grid>
-                </div>
-              )}
+            <Card bordered={false} style={{ marginBottom: 24 }} loading={loading}>
+              <div>
+                <Card.Grid style={{ width: '20%', boxShadow: 'initial' }} hoverable={false}>
+                  <div className={styles.avatarHolder}>
+                    <img alt="" src={userInfo.avatar} />
+                  </div>
+                </Card.Grid>
+                <Card.Grid style={{ width: '80%', boxShadow: 'initial' }} hoverable={false}>
+                  <div className={styles.team}>
+                    <div className={styles.teamTitle}>项目组详情</div>
+                    {this.renderUserInfo(userInfo)}
+                  </div>
+                </Card.Grid>
+              </div>
             </Card>
           </Col>
           <Col lg={24} md={24}>
@@ -139,18 +125,12 @@ class AccountCenter extends Component<AccountCenterProps, AccountCenterState> {
               <Fragment>
                 <List
                   itemLayout="horizontal"
-                  dataSource={aaabbbccc}
-                  renderItem={(item) => {
-                    const target = currentUser[item.id];
-                    const renderFunc = item.content;
+                  dataSource={dataSource}
+                  renderItem={({ renderFunc, title }) => {
                     return (
                       <List.Item>
-                        <List.Item.Meta
-                          avatar={item.avatar}
-                          title={item.title}
-                          description={target ? '' : item.description}
-                        />
-                        {target ? renderFunc(currentUser) : null}
+                        <List.Item.Meta title={title} />
+                        {renderFunc && renderFunc(userInfo)}
                       </List.Item>
                     );
                   }}
@@ -164,15 +144,18 @@ class AccountCenter extends Component<AccountCenterProps, AccountCenterState> {
   }
 }
 
-export default connect(
-  ({
-    loading,
+type obj = {
+  accountCenter: any;
+  loading: {
+    effects: Record<string, boolean>;
+  };
+};
+
+const mapStateToProps = ({ accountCenter, loading }: obj) => {
+  return {
     accountCenter,
-  }: {
-    loading: { effects: { [key: string]: boolean } };
-    accountCenter: ModalState;
-  }) => ({
-    currentUser: accountCenter.currentUser,
-    currentUserLoading: loading.effects['accountCenter/fetchCurrent'],
-  }),
-)(AccountCenter);
+    loading: loading.effects['accountCenter/fetch'],
+  };
+};
+
+export default connect(mapStateToProps)(AccountCenter);

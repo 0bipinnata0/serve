@@ -29,7 +29,7 @@ const LabelInputTran = ({
           labelStyle={{ backgroundColor: 'initial', width: '80px', padding: '20px 0' }}
         >
           <Input
-            placeholder="Basic usage"
+            placeholder="项目组负责人很懒，什么都没有留下"
             value={val}
             bordered={isInput}
             disabled={!isInput}

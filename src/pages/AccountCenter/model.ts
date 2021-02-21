@@ -1,45 +1,53 @@
 import { queryCurrent } from '@/services/user';
 import type { Reducer, Effect } from 'umi';
-import type { CurrentUser } from './data.d';
+import type { CurrentUser } from '../AccountSettings/data';
 
 export type ModalState = {
-  currentUser: Partial<CurrentUser>;
+  userInfo?: Partial<CurrentUser>;
+  isLoading?: boolean;
 };
 
 export type ModelType = {
   namespace: string;
   state: ModalState;
   effects: {
-    fetchCurrent: Effect;
+    fetch: Effect;
   };
   reducers: {
-    saveCurrentUser: Reducer<ModalState>;
+    save: Reducer<ModalState>;
+    clear: Reducer<ModalState>;
   };
+};
+
+const initState = {
+  userInfo: {},
+  isLoading: false,
 };
 
 const Model: ModelType = {
   namespace: 'accountCenter',
 
-  state: {
-    currentUser: {},
-  },
+  state: initState,
 
   effects: {
-    *fetchCurrent(_, { call, put }) {
+    *fetch(_, { call, put }) {
       const response = yield call(queryCurrent);
       yield put({
-        type: 'saveCurrentUser',
-        payload: response,
+        type: 'save',
+        payload: { userInfo: response },
       });
     },
   },
 
   reducers: {
-    saveCurrentUser(state, action) {
+    save(state, { payload }) {
       return {
-        ...(state as ModalState),
-        currentUser: action.payload || {},
+        ...state,
+        ...payload,
       };
+    },
+    clear() {
+      return initState;
     },
   },
 };
