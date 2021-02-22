@@ -16,5 +16,5 @@ export async function accountLogin(params: LoginParamsType) {
 }
 
 export async function outLogin() {
-  return request('/api/login/outLogin');
+  return request('/auth/outLogin');
 }
