@@ -14,6 +14,12 @@ export async function modifyUser(key: string, val: string) {
   });
 }
 
+export async function modifyDescription(description: string) {
+  return request('/user/modifyDescription', {
+    params: { description },
+  });
+}
+
 export async function queryNotices(): Promise<any> {
   return request<{ data: API.NoticeIconData[] }>('/api/notices');
 }

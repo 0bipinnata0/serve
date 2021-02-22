@@ -1,4 +1,4 @@
-import { modifyUser, queryCurrent } from '@/services/user';
+import { modifyDescription, modifyUser, queryCurrent } from '@/services/user';
 import type { Effect, Reducer } from 'umi';
 import type { CurrentUser } from './data.d';
 
@@ -41,15 +41,16 @@ const Model: ModelType = {
     },
     *account({ account }, { call }) {
       yield call(modifyUser, 'username', account);
+      window.sessionStorage.removeItem('x-auth-token');
     },
 
     *password({ password }, { call }) {
       yield call(modifyUser, 'password', password);
+      window.sessionStorage.removeItem('x-auth-token');
     },
 
     *description({ description }, { call }) {
-      yield console.log(description, call);
-      // yield call(modifyUser, 'description', description);
+      yield call(modifyDescription, description);
     },
   },
 

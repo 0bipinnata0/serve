@@ -1,7 +1,6 @@
 import { CheckSquareOutlined, EditOutlined } from '@ant-design/icons';
 import { Button, Descriptions, Input } from 'antd';
-import React, { useState } from 'react';
-import { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const LabelInputTran = ({
   title,
@@ -23,7 +22,7 @@ const LabelInputTran = ({
 
   return (
     <>
-      <Descriptions bordered>
+      <Descriptions bordered style={{ width: '100%' }}>
         <Descriptions.Item
           label={title}
           labelStyle={{ backgroundColor: 'initial', width: '80px', padding: '20px 0' }}
@@ -47,6 +46,7 @@ const LabelInputTran = ({
             const action = { type: `accountSettings/${id}` };
             action[id] = val;
             dispatch(action);
+            window.location.reload();
           }}
         >
           确定
