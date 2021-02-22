@@ -20,6 +20,8 @@ export class HeadService {
     const output = new Array(globalData[0].length).fill(1);
 
     const nodes = [1, 2, 3, 4];
+    const availableTime = [1, 2, 3];
+    const storage = [1, 2, 3];
     const nameArr = ['Total', 'Running', 'Free', 'Error'];
     const numberArr = [0, 0, 0, 0];
     const infoData = await ssh.exec('sinfo');
@@ -39,6 +41,20 @@ export class HeadService {
           break;
       }
     });
+
+    const availableTimeRow = await ssh.exec(createScript('availableTime'));
+    const storageRow = await ssh.exec(createScript('storage'));
+
+    const availableTimeList = availableTimeRow
+      .split('\n')
+      .filter((item) => item)
+      .map((item) => item.trim().split('-'));
+
+    const storageList = storageRow
+      .split('\n')
+      .filter((item) => item)
+      .map((item) => item.trim().split('-'));
+
     return JSON.stringify({
       nodes: nodes.map((_, index) => ({
         key: index,
@@ -50,16 +66,14 @@ export class HeadService {
         name: globalData[0][index],
         number: globalData[1][index],
       })),
-      availableTime: [
-        { x: 'Total', y: 1000 },
-        { x: 'Used', y: 400 },
-        { x: 'Left', y: 600 },
-      ],
-      storage: [
-        { x: 'Total', y: 1000 },
-        { x: 'Used', y: 330 },
-        { x: 'Left', y: 670 },
-      ],
+      availableTime: availableTime.map((_, index) => ({
+        x: availableTimeList[0][index],
+        y: availableTimeList[1][index] * 1,
+      })),
+      storage: storage.map((_, index) => ({
+        x: storageList[0][index],
+        y: storageList[1][index] * 1,
+      })),
     });
   }
 }
