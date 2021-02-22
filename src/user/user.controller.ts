@@ -28,4 +28,12 @@ export class UserController {
   ): any {
     this.userService.modifyUser(key, val, token);
   }
+
+  @Get('modifyDescription')
+  modifyDescription(
+    @Query('description') description: string,
+    @Headers('token') token: string,
+  ): any {
+    this.userService.modifyDescription(description, token);
+  }
 }

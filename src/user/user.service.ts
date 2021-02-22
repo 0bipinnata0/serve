@@ -4,16 +4,13 @@ import * as fs from 'fs';
 import { JwtService } from '@nestjs/jwt';
 @Injectable()
 export class UserService {
-  private readonly userList: Array<UserEntity>;
-
   // TODO 手动修改对应用户的数据需要重启服务
-  constructor(private readonly jwtService: JwtService) {
-    const user = fs.readFileSync('./sh/user/user.json');
-    this.userList = JSON.parse(user.toString());
-  }
+  constructor(private readonly jwtService: JwtService) {}
 
   async find(username: string): Promise<UserEntity> {
-    const user = this.userList.find((user) => user.username === username);
+    const users = fs.readFileSync('./sh/user/user.json');
+    const userList = JSON.parse(users.toString());
+    const user = userList.find((userItem) => userItem.username === username);
     if (user) return user;
     else return null;
   }
@@ -43,6 +40,14 @@ export class UserService {
     userInfo.forEach(
       (item) => item.id === userIndex.sub && (item[key] = value),
     );
+    fs.writeFileSync(targetFile, JSON.stringify(userInfo));
+  }
+
+  modifyDescription(description: string, token: string) {
+    const { sub } = <Record<string, string>>this.jwtService.decode(token);
+    const targetFile = `./sh/user/info/${sub}.json`;
+    const userInfo = JSON.parse(fs.readFileSync(targetFile).toString());
+    userInfo.description = description;
     fs.writeFileSync(targetFile, JSON.stringify(userInfo));
   }
 }
