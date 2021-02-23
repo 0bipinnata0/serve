@@ -15,19 +15,19 @@ export class AuthService {
     const user = await this.userService.find(username);
     // 密码明文
     if (user && user.password === password) {
-      // const { password, ...userInfo } = user;
-      return user;
+      const { password, ...userInfo } = user;
+      return userInfo;
     } else {
       return null;
     }
   }
 
   async login(user: UserEntity): Promise<ResponseData> {
-    const { id, username, password } = user;
+    const { id, username, account } = user;
     return {
       statusCode: 200,
       message: 'ok',
-      data: this.jwtService.sign({ username, password, sub: id }),
+      data: this.jwtService.sign({ username, sub: id, account }),
     };
   }
 }

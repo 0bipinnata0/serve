@@ -4,15 +4,19 @@ import * as fs from 'fs';
 import { JwtService } from '@nestjs/jwt';
 @Injectable()
 export class UserService {
-  // TODO 手动修改对应用户的数据需要重启服务
+  // TODO: 手动修改对应用户的数据需要重启服务
   constructor(private readonly jwtService: JwtService) {}
 
   async find(username: string): Promise<UserEntity> {
     const users = fs.readFileSync('./sh/user/user.json');
     const userList = JSON.parse(users.toString());
     const user = userList.find((userItem) => userItem.username === username);
-    if (user) return user;
-    else return null;
+    if (user) {
+      const userInfoByte = fs.readFileSync(`./sh/user/info/${user.id}.json`);
+      const userInfo = JSON.parse(userInfoByte.toString());
+      user.account = userInfo.account;
+      return user;
+    } else return null;
   }
 
   getUserInfo(token: any): any {

@@ -12,9 +12,17 @@ import { AboutController } from './about/about.controller';
 import { TasksService } from './tasks/tasks.service';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
+import { JwtModule } from '@nestjs/jwt';
+import { jwtContants } from './auth/jwt.contants';
 
 @Module({
-  imports: [AuthModule, UserModule],
+  imports: [
+    AuthModule,
+    UserModule,
+    JwtModule.register({
+      secret: jwtContants.secret,
+    }),
+  ],
   controllers: [
     AppController,
     ArticleController,

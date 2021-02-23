@@ -1,8 +1,11 @@
 import * as fs from 'fs';
 import SSH2Promise = require('ssh2-promise');
 
-export const createScript = (filename: string) => {
-  const transfer = fs.readFileSync('./sh/' + filename + '.sh', 'utf-8');
+export const createScript = (filename, arg = '') => {
+  let transfer = fs.readFileSync('./sh/' + filename + '.sh', 'utf-8');
+  if (arg) {
+    transfer = transfer.replace('*~*', arg);
+  }
   return transfer;
 };
 
