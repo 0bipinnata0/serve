@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styles from './index.less';
-import { Table } from 'antd';
+import { Col, Row, Select, Table } from 'antd';
 import type { StatisticsType } from './data';
 import { connect } from 'umi';
 
@@ -9,7 +9,7 @@ const columns = [
     title: 'User name',
     dataIndex: 'username',
     key: 'username',
-    render: (text) => <a>{text}</a>,
+    render: (text: any) => <a>{text}</a>,
   },
   {
     title: '使用时长',
@@ -18,26 +18,26 @@ const columns = [
         title: 'This month',
         dataIndex: 'thismonth',
         key: 'thismonth',
-        render: (text) => <a>{text}</a>,
+        render: (text: any) => <a>{text}</a>,
       },
       {
         title: 'Last month',
         dataIndex: 'lastmonth',
         key: 'lastmonth',
-        render: (text) => <a>{text}</a>,
+        render: (text: any) => <a>{text}</a>,
       },
       {
         title: 'Total',
         dataIndex: 'total',
         key: 'total',
-        render: (text) => <a>{text}</a>,
+        render: (text: any) => <a>{text}</a>,
       },
-      {
-        title: '',
-        dataIndex: 'tmp',
-        key: 'tmp',
-        render: (text) => <a>{text}</a>,
-      },
+      // {
+      //   title: '',
+      //   dataIndex: 'tmp',
+      //   key: 'tmp',
+      //   render: (text: any) => <a>{text}</a>,
+      // },
     ],
   },
 ];
@@ -70,10 +70,28 @@ class Statistics extends Component<StatisticsBaseType> {
   }
 
   render() {
-    const { statistics, loading } = this.props;
+    const { statistics, loading, dispatch } = this.props;
     const { data } = statistics;
+
     return (
       <div className={styles.container}>
+        <Row>
+          <Col span={20} />
+          <Col span={4}>
+            <Select
+              labelInValue
+              defaultValue={{ value: 'second' }}
+              style={{ width: 120 }}
+              onChange={({ key }) => {
+                dispatch({ type: 'statistics/fetch', payload: key });
+              }}
+            >
+              <Select.Option value="second">second</Select.Option>
+              <Select.Option value="minute">minute</Select.Option>
+              <Select.Option value="hour">hour</Select.Option>
+            </Select>
+          </Col>
+        </Row>
         <div id="components-table-demo-basic">
           <Table columns={columns} dataSource={data} bordered={true} loading={loading} />
         </div>

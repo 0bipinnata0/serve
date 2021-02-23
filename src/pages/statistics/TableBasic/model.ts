@@ -1,4 +1,4 @@
-import { fake_statistics } from '@/services/statistics';
+import { getStatistics } from '@/services/statistics';
 import type { Effect, Reducer } from 'umi';
 import type { StatisticsType } from './data';
 
@@ -24,8 +24,8 @@ const Model: ModelType = {
   state: initState,
 
   effects: {
-    *fetch(_, { call, put }) {
-      const response = yield call(fake_statistics);
+    *fetch({ payload }, { call, put }) {
+      const response = yield call(getStatistics, { type: payload });
       yield put({
         type: 'save',
         payload: response,

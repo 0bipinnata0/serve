@@ -1,5 +1,7 @@
 import { request } from 'umi';
 
-export async function fake_statistics() {
-  return request<API.Faketasks>('/statistics');
+export async function getStatistics(params: { type: string } = { type: 'second' }) {
+  return request<API.Faketasks>('/statistics', {
+    params,
+  });
 }
