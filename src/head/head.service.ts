@@ -21,25 +21,20 @@ export class HeadService {
     const ssh = this.appService.getSSh();
     const { account } = <Record<string, string>>this.jwtService.decode(token);
 
-    const coresRow = await ssh.exec(createScript('cores'));
-    const globalData = coresRow
-      .split('\n')
-      .filter((item) => item)
-      .map((item) => item.trim().split(' '));
-    const output = new Array(globalData[0].length).fill(1);
-
-    const nameArr = ['Total', 'Running', 'Free', 'Error'];
-    const numberArr = [0, 0, 0, 0];
-
     const nodesRow = await ssh.exec(createScript('nodes', account));
+    const coresRow = await ssh.exec(createScript('cores', account));
     const availableTimeRow = await ssh.exec(createScript('availableTime'));
     const storageRow = await ssh.exec(createScript('storage'));
+
+    const coresList = coresRow
+      .split('\n')
+      .filter((item) => item)
+      .map((item) => item.trim().split('-'));
 
     const nodesList = nodesRow
       .split('\n')
       .filter((item) => item)
       .map((item) => item.trim().split('-'));
-    console.log('nodesList', nodesList);
 
     const availableTimeList = availableTimeRow
       .split('\n')
@@ -57,10 +52,10 @@ export class HeadService {
         name: nodesList[0][index],
         number: nodesList[1][index],
       })),
-      cores: output.map((_, index) => ({
+      cores: cores.map((_, index) => ({
         key: index,
-        name: globalData[0][index],
-        number: globalData[1][index],
+        name: coresList[0][index],
+        number: coresList[1][index],
       })),
       availableTime: availableTime.map((_, index) => ({
         x: availableTimeList[0][index],
