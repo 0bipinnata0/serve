@@ -8,7 +8,6 @@ import { JwtService } from '@nestjs/jwt';
 export class HeadService {
   constructor(
     private readonly appService: AppService,
-    private readonly tasksService: TasksService,
     private readonly jwtService: JwtService,
   ) {}
 

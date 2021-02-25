@@ -1,6 +1,7 @@
 import { createScript } from './../utils/connectHelp';
 import { AppService } from './../app.service';
 import { Injectable } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 
 const timeRate = {
   second: 1,
@@ -10,9 +11,13 @@ const timeRate = {
 
 @Injectable()
 export class StatisticsService {
-  constructor(private readonly appService: AppService) {}
+  constructor(
+    private readonly appService: AppService,
+    private readonly jwtService: JwtService,
+  ) {}
 
-  async getStatistics(type: string): Promise<{ data: string }> {
+  async getStatistics(type: string, token: string): Promise<{ data: string }> {
+    const { account } = <Record<string, string>>this.jwtService.decode(token);
     const ssh = this.appService.getSSh();
     const data = await ssh.exec(createScript('statistics'));
     const output = data

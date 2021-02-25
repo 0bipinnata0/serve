@@ -1,4 +1,4 @@
-import { Controller, Get, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Query, UseGuards, Headers } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { TasksService } from './tasks.service';
 
@@ -8,12 +8,15 @@ export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
   @Get('getTasks')
-  getTasks(): Promise<string> {
-    return this.tasksService.getTasks();
+  getTasks(@Headers('token') token: string): Promise<string> {
+    return this.tasksService.getTasks(token);
   }
 
   @Get('deleteTask')
-  deleteTask(@Query('id') id: string): Promise<string> {
-    return this.tasksService.deleteTask(id);
+  deleteTask(
+    @Query('id') id: string,
+    @Headers('token') token: string,
+  ): Promise<string> {
+    return this.tasksService.deleteTask(id, token);
   }
 }
