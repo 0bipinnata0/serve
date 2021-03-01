@@ -19,7 +19,7 @@ export class StatisticsService {
   async getStatistics(type: string, token: string): Promise<{ data: string }> {
     const { account } = <Record<string, string>>this.jwtService.decode(token);
     const ssh = this.appService.getSSh();
-    const data = await ssh.exec(createScript('statistics'));
+    const data = await ssh.exec(createScript('statistics', account));
     const output = data
       .split('\n')
       .filter((item) => item)

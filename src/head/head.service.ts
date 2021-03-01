@@ -1,4 +1,3 @@
-import { TasksService } from './../tasks/tasks.service';
 import { AppService } from './../app.service';
 import { createScript } from './../utils/connectHelp';
 import { Injectable } from '@nestjs/common';
